@@ -1,0 +1,113 @@
+/*
+Given an array of integers nums and an integer target, return indices of the two numbers such that they add up to target.
+
+You may assume that each input would have exactly one solution, and you may not use the same element twice.
+
+You can return the answer in any order.
+
+Example 1:
+
+Input: nums = [2,7,11,15], target = 9
+Output: [0,1]
+Explanation: Because nums[0] + nums[1] == 9, we return [0, 1].
+Example 2:
+
+Input: nums = [3,2,4], target = 6
+Output: [1,2]
+Example 3:
+
+Input: nums = [3,3], target = 6
+Output: [0,1]
+ 
+
+Constraints:
+
+2 <= nums.length <= 104
+-109 <= nums[i] <= 109
+-109 <= target <= 109
+Only one valid answer exists.
+ 
+
+Follow-up: Can you come up with an algorithm that is less than O(n2) time complexity?
+*/
+
+import java.util.*;
+class Solution {
+    public int[] twoSum(int[] nums, int target) {
+        Scanner sc=new Scanner(System.in);
+        int len=nums.length;
+        
+        //nums[] -> arr
+        List<Element> arr = new ArrayList<Element>();
+        for(int i=0;i<len;i++){
+            arr.add(new Element(i, nums[i]));
+        }
+        
+        //sort min-max
+        Collections.sort(arr);
+        
+        int[] res=new int[2];
+        outerloop:
+        for(int i=0 ; i<len && arr.get(i).value<=(target/2) ; i++){
+            for(int j=len-1 ; j>i && arr.get(j).value>=(target/2) ; j--){
+                if(target-arr.get(i).value==arr.get(j).value){
+                    res[0]=arr.get(i).index;
+                    res[1]=arr.get(j).index;
+                    break outerloop;
+                }
+            }
+        }
+        return res;
+    }
+}
+
+class Element implements Comparable<Element> {
+
+    int index, value;
+
+    Element(int index, int value){
+        this.index = index;
+        this.value = value;
+    }
+
+    public int compareTo(Element e) {
+        return this.value - e.value;
+    }
+}
+
+//แย่มาก555
+//Runtime: 47 ms, faster than 46.98% of Java online submissions for Two Sum.
+//Memory Usage: 46.9 MB, less than 9.30% of Java online submissions for Two Sum.
+
+//Solve good time popular
+class Solution {
+    public int[] twoSum(int[] nums, int target) {
+        HashMap<Integer,Integer> hm=new HashMap<>();        
+        for(int i=0;i<nums.length;i++)
+        {
+            int value=target-nums[i];       
+            if(hm.containsKey(value))
+            {
+                return new int[] {hm.get(value),i};
+            }
+            hm.put(nums[i],i);           
+        }       
+        throw new IllegalArgumentException("no match found");       
+    }
+}
+
+//Solve good mem popular
+class Solution {
+    public int[] twoSum(int[] nums, int target) {
+        Map<Integer, Integer> map = new HashMap<>();
+        for(int i = 0; i < nums.length; i++) {
+            int comp = target - nums[i];
+            if(map.containsKey(comp)) {
+                return new int[] {i, map.get(comp)};
+            } else {
+                map.put(nums[i], i);   
+            }
+        }
+        return null;
+    }
+}
